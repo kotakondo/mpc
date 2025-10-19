@@ -2,13 +2,13 @@ mpc:
   ros__parameters:
     # Frames and transform usage
     use_tf_pose: false
-    base_frame: "base_link"
-    tracking_frame: "odom"
+    base_frame: "RR06"
+    tracking_frame: "world"
 
     # Topics
-    pose_topic: "/pose"          # geometry_msgs/PoseStamped input
-    goal_topic: "/goal"          # geometry_msgs/PoseStamped goal
-    cmd_vel_topic: "/cmd_vel"    # geometry_msgs/Twist output
+    pose_topic: "/RR06/world"          # geometry_msgs/PoseStamped input
+    goal_topic: "/goal_pose"          # geometry_msgs/PoseStamped goal
+    cmd_vel_topic: "/RR06/cmd_vel_auto"    # geometry_msgs/Twist output
 
     # Behavior
     goal_tolerance: 0.3          # stop radius [m]
@@ -19,7 +19,7 @@ mpc:
     N_horizon: 20
     v_min: 0.0
     v_max: 1.0
-    w_max: 1.0
+    w_max: 0.5
 
     # Cost weights
     Q_pos: 5.0

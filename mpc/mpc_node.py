@@ -15,7 +15,7 @@ from geometry_msgs.msg import PoseStamped, Twist
 from nav_msgs.msg import Odometry
 
 from tf2_ros import Buffer, TransformListener, LookupException, ConnectivityException, ExtrapolationException
-from tf2_geometry_msgs import do_transform_pose
+from tf2_geometry_msgs import do_transform_pose, do_transform_pose_stamped
 
 import casadi as ca
 import do_mpc
@@ -128,7 +128,7 @@ class MPCNode(Node):
                     target_frame=self.tracking_frame,
                     source_frame=g.header.frame_id,
                     time=rclpy.time.Time())
-                g = do_transform_pose(g, tf)
+                g = do_transform_pose_stamped(g, tf)
                 g.header.frame_id = self.tracking_frame
             except (LookupException, ConnectivityException, ExtrapolationException) as e:
                 self.get_logger().warn(f'Goal transform failed: {e}')
@@ -150,7 +150,7 @@ class MPCNode(Node):
                 base_in_base.header.stamp = self.get_clock().now().to_msg()
                 base_in_base.header.frame_id = self.base_frame
                 base_in_base.pose.orientation.w = 1.0
-                pose = do_transform_pose(base_in_base, tf)
+                pose = do_transform_pose_stamped(base_in_base, tf)
                 pose.header.frame_id = self.tracking_frame
                 return pose
             except (LookupException, ConnectivityException, ExtrapolationException) as e:
@@ -166,7 +166,7 @@ class MPCNode(Node):
                         target_frame=self.tracking_frame,
                         source_frame=ps.header.frame_id,
                         time=rclpy.time.Time())
-                    ps = do_transform_pose(ps, tf)
+                    ps = do_transform_pose_stamped(ps, tf)
                     ps.header.frame_id = self.tracking_frame
                 except (LookupException, ConnectivityException, ExtrapolationException) as e:
                     self.get_logger().warn(f'Pose transform failed: {e}')
@@ -272,7 +272,7 @@ class MPCNode(Node):
             return
         self.cur_pose_tracking = cur
 
-        if self.goal_pose is None:
+        if self.goal_pose is None or self.goal_reached:
             self._publish_cmd(0.0, 0.0)
             return
 
