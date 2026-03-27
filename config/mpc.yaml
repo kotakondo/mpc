@@ -1,14 +1,14 @@
 mpc:
   ros__parameters:
-    # Frames and transform usage
+    # Frames and transform usage — tracking_frame must match the path frame (RR03/map)
     use_tf_pose: false
-    base_frame: "RR06"
-    tracking_frame: "world"
+    base_frame: "RR03/base_link"
+    tracking_frame: "RR03/map"
 
     # Topics
-    pose_topic: "/RR06/world"          # geometry_msgs/PoseStamped input
-    goal_topic: "/goal_pose"          # geometry_msgs/PoseStamped goal
-    cmd_vel_topic: "/RR06/cmd_vel_auto"    # geometry_msgs/Twist output
+    pose_topic: "/RR03/dlio/odom_node/pose"          # geometry_msgs/PoseStamped input
+    path_topic: "/RR03/mpc_waypoints"                # nav_msgs/Path from mighty
+    cmd_vel_topic: "/RR03/cmd_vel_auto"              # geometry_msgs/Twist output
 
     # Behavior
     goal_tolerance: 0.3          # stop radius [m]
@@ -20,11 +20,12 @@ mpc:
     v_min: 0.0
     v_max: 1.0
     w_max: 0.5
+    max_linear_accel: 0.5    # [m/s^2] trapezoidal ramp-up/down rate
 
     # Cost weights
     Q_pos: 5.0
     Q_yaw: 1.0
     R_v: 0.1
     R_w: 0.05
-    dR_v: 0.01
+    dR_v: 0.1
     dR_w: 0.01
