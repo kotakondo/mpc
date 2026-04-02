@@ -1,4 +1,4 @@
-mpc:
+/**:
   ros__parameters:
     # Frames — use TF for pose in simulation (Gazebo publishes map → {ns}/base_link)
     use_tf_pose: true

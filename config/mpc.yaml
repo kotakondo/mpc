@@ -1,4 +1,4 @@
-mpc:
+/**:
   ros__parameters:
     # Frames — for hardware, use direct pose messages (not TF)
     use_tf_pose: false

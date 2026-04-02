@@ -162,9 +162,9 @@ class MPCNode(Node):
         self.declare_parameter('base_frame', 'base_link')
         self.declare_parameter('tracking_frame', 'odom')
 
-        self.declare_parameter('pose_topic', '/pose')
-        self.declare_parameter('path_topic', '/mpc_waypoints')
-        self.declare_parameter('cmd_vel_topic', '/cmd_vel')
+        self.declare_parameter('pose_topic', 'pose')
+        self.declare_parameter('path_topic', 'mpc_waypoints')
+        self.declare_parameter('cmd_vel_topic', 'cmd_vel')
 
         self.declare_parameter('goal_tolerance', 0.3)
         self.declare_parameter('control_rate_hz', 30.0)
