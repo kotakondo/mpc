@@ -187,10 +187,12 @@ class MPCNode(Node):
         self.base_frame = self.get_parameter('base_frame').get_parameter_value().string_value.lstrip('/')
         self.tracking_frame = self.get_parameter('tracking_frame').get_parameter_value().string_value.lstrip('/')
 
-        # Auto-prefix base_frame with namespace for TF (ROS 2 namespacing doesn't affect TF frames)
+        # Auto-prefix TF frames with namespace (ROS 2 namespacing doesn't affect TF frame IDs)
         ns = self.get_namespace().strip('/')
         if ns and '/' not in self.base_frame:
             self.base_frame = f'{ns}/{self.base_frame}'
+        if ns and '/' not in self.tracking_frame:
+            self.tracking_frame = f'{ns}/{self.tracking_frame}'
 
         self.pose_topic = self.get_parameter('pose_topic').get_parameter_value().string_value
         self.path_topic = self.get_parameter('path_topic').get_parameter_value().string_value
