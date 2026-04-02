@@ -1,13 +1,13 @@
 mpc:
   ros__parameters:
-    # Frames — use TF for pose in simulation (Gazebo publishes map → NX01/base_link)
+    # Frames — use TF for pose in simulation (Gazebo publishes map → {ns}/base_link)
     use_tf_pose: true
-    base_frame: "NX01/base_link"
+    base_frame: "base_link"           # resolved relative to namespace
     tracking_frame: "map"
 
-    # Topics
-    path_topic: "/NX01/mpc_waypoints"               # path_msgs/SpeedyPath from mighty
-    cmd_vel_topic: "/NX01/cmd_vel"                   # geometry_msgs/Twist output to Gazebo
+    # Topics (relative — namespace is set at launch via -r __ns:=/{agent})
+    path_topic: "mpc_waypoints"               # path_msgs/SpeedyPath from mighty
+    cmd_vel_topic: "cmd_vel"                   # geometry_msgs/Twist output to Gazebo
 
     # Behavior
     goal_tolerance: 0.3          # stop radius [m]

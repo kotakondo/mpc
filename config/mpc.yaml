@@ -1,14 +1,14 @@
 mpc:
   ros__parameters:
-    # Frames and transform usage — tracking_frame must match the path frame (RR03/map)
+    # Frames — for hardware, use direct pose messages (not TF)
     use_tf_pose: false
-    base_frame: "RR03/base_link"
-    tracking_frame: "RR03/map"
+    base_frame: "base_link"           # resolved relative to namespace
+    tracking_frame: "map"
 
-    # Topics
-    pose_topic: "/RR03/dlio/odom_node/pose"          # geometry_msgs/PoseStamped input
-    path_topic: "/RR03/mpc_waypoints"                # nav_msgs/Path from mighty
-    cmd_vel_topic: "/RR03/cmd_vel_auto"              # geometry_msgs/Twist output
+    # Topics (relative — namespace is set at launch via -r __ns:=/{agent})
+    pose_topic: "dlio/odom_node/pose"          # geometry_msgs/PoseStamped input
+    path_topic: "mpc_waypoints"                # path_msgs/SpeedyPath from mighty
+    cmd_vel_topic: "cmd_vel_auto"              # geometry_msgs/Twist output
 
     # Behavior
     goal_tolerance: 0.3          # stop radius [m]
