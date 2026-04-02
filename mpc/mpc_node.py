@@ -13,7 +13,7 @@ from rclpy.duration import Duration
 
 from geometry_msgs.msg import PoseStamped, Twist
 from nav_msgs.msg import Path
-from path_msgs.msg import SpeedyPath
+from dynus_interfaces.msg import SpeedyPath
 
 from tf2_ros import Buffer, TransformListener, LookupException, ConnectivityException, ExtrapolationException
 from tf2_geometry_msgs import do_transform_pose_stamped
