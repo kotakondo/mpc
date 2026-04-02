@@ -13,6 +13,7 @@ from rclpy.duration import Duration
 
 from geometry_msgs.msg import PoseStamped, Twist
 from nav_msgs.msg import Path
+from path_msgs.msg import SpeedyPath
 
 from tf2_ros import Buffer, TransformListener, LookupException, ConnectivityException, ExtrapolationException
 from tf2_geometry_msgs import do_transform_pose_stamped
@@ -215,7 +216,7 @@ class MPCNode(Node):
         # --- Subscribers / Publishers ---
         if not self.use_tf_pose:
             self.pose_sub = self.create_subscription(PoseStamped, self.pose_topic, self._pose_cb, 10)
-        self.path_sub = self.create_subscription(Path, self.path_topic, self._path_cb, 10)
+        self.path_sub = self.create_subscription(SpeedyPath, self.path_topic, self._path_cb, 10)
         self.cmd_pub = self.create_publisher(Twist, self.cmd_vel_topic, 10)
 
         # --- State ---
@@ -251,15 +252,18 @@ class MPCNode(Node):
         frame = msg.header.frame_id.lstrip('/') if msg.header.frame_id else ''
         self._log_debug(f"ODOM: frame={frame} pos=({x:.4f},{y:.4f}) yaw={yaw:.4f}")
 
-    def _path_cb(self, msg: Path) -> None:
-        """Receive nav_msgs/Path from mighty's publishMpcPath."""
+    def _path_cb(self, msg: SpeedyPath) -> None:
+        """Receive path_msgs/SpeedyPath from mighty's publishMpcPath."""
         if len(msg.poses) < 2:
             return
 
         path_frame = msg.header.frame_id.lstrip('/') if msg.header.frame_id else ''
         path = np.array([[p.pose.position.x, p.pose.position.y] for p in msg.poses], dtype=float)
-        # v_des will be overwritten each control step with trapezoidal profile
-        v_des = np.ones(len(path), dtype=float) * self.v_max
+        # Use velocity references from mighty if available, otherwise fall back to v_max
+        if len(msg.speeds) == len(path):
+            v_des = np.array(msg.speeds, dtype=float)
+        else:
+            v_des = np.ones(len(path), dtype=float) * self.v_max
 
         # Get current state for arclength projection
         cur = self._current_pose_tracking()

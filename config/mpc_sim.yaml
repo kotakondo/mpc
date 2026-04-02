@@ -1,0 +1,30 @@
+mpc:
+  ros__parameters:
+    # Frames — use TF for pose in simulation (Gazebo publishes map → NX01/base_link)
+    use_tf_pose: true
+    base_frame: "NX01/base_link"
+    tracking_frame: "map"
+
+    # Topics
+    path_topic: "/NX01/mpc_waypoints"               # path_msgs/SpeedyPath from mighty
+    cmd_vel_topic: "/NX01/cmd_vel"                   # geometry_msgs/Twist output to Gazebo
+
+    # Behavior
+    goal_tolerance: 0.3          # stop radius [m]
+    control_rate_hz: 30.0
+
+    # MPC horizon and dynamics
+    dt: 0.05                     # time step [s]
+    N_horizon: 20
+    v_min: 0.0
+    v_max: 1.0
+    w_max: 0.5
+    max_linear_accel: 0.5    # [m/s^2] trapezoidal ramp-up/down rate
+
+    # Cost weights
+    Q_pos: 5.0
+    Q_yaw: 1.0
+    R_v: 0.1
+    R_w: 0.05
+    dR_v: 0.1
+    dR_w: 0.01
