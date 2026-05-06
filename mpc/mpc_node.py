@@ -483,7 +483,7 @@ class MPCNode(Node):
             t0 = time.time()
             u = self.mpc.make_step(x_vec)
             t1 = time.time()
-            self.get_logger().info(f'{YELLOW}MPC solve: {(t1 - t0) * 1000:.1f} ms{RESET}')
+            # self.get_logger().info(f'{YELLOW}MPC solve: {(t1 - t0) * 1000:.1f} ms{RESET}')
         except Exception as e:
             self.get_logger().warn(f'MPC solver failed: {e}')
             self._publish_cmd(0.0, 0.0)
