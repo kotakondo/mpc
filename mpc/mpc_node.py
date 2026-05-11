@@ -184,15 +184,20 @@ class MPCNode(Node):
 
         # --- Load parameters ---
         self.use_tf_pose = self.get_parameter('use_tf_pose').get_parameter_value().bool_value
-        self.base_frame = self.get_parameter('base_frame').get_parameter_value().string_value.lstrip('/')
-        self.tracking_frame = self.get_parameter('tracking_frame').get_parameter_value().string_value.lstrip('/')
+        base_frame_raw = self.get_parameter('base_frame').get_parameter_value().string_value
+        tracking_frame_raw = self.get_parameter('tracking_frame').get_parameter_value().string_value
 
-        # Auto-prefix TF frames with namespace (ROS 2 namespacing doesn't affect TF frame IDs)
+        # Auto-prefix TF frames with namespace (ROS 2 namespacing doesn't affect TF frame IDs).
+        # Leading '/' means "absolute frame — do not prefix" (e.g. shared global "map" in sim).
         ns = self.get_namespace().strip('/')
-        if ns and '/' not in self.base_frame:
-            self.base_frame = f'{ns}/{self.base_frame}'
-        if ns and '/' not in self.tracking_frame:
-            self.tracking_frame = f'{ns}/{self.tracking_frame}'
+        def _resolve(frame: str) -> str:
+            if frame.startswith('/'):
+                return frame[1:]
+            if ns and '/' not in frame:
+                return f'{ns}/{frame}'
+            return frame
+        self.base_frame = _resolve(base_frame_raw)
+        self.tracking_frame = _resolve(tracking_frame_raw)
 
         self.pose_topic = self.get_parameter('pose_topic').get_parameter_value().string_value
         self.path_topic = self.get_parameter('path_topic').get_parameter_value().string_value
