@@ -17,8 +17,17 @@
     dt: 0.05                     # time step [s]
     N_horizon: 20
     v_min: 0.0
-    v_max: 1.0
-    w_max: 0.5
+    v_max: 0.5
+    # A differential-drive robot's tightest arc while moving is v_max / w_max.
+    # At v_max 0.5 / w_max 0.5 that was 1.00 m, wider than the ~1.37 m corridors
+    # in ACL_office allow, so the robot cut corners and clipped walls with its
+    # inside wheels. w_max 1.5 gives a 0.33 m radius. Measured over 10-run
+    # exploration campaigns: wall contacts 2.00/run -> 0.50/run.
+    #
+    # NOTE: raising w_max ALONE made things worse (4/8 runs stranded, coverage
+    # down to 0.82) — it is only safe together with the exploration
+    # state-machine fixes in mighty (return-home gate + thrash guard).
+    w_max: 1.5
     max_linear_accel: 0.5    # [m/s^2] trapezoidal ramp-up/down rate
 
     # Cost weights
