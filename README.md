@@ -53,9 +53,7 @@ MIGHTY launches it automatically for ground robots — see
 ## Acknowledgments
 
 The MPC controller was originally developed by
-**[Lucas Jia (@lucas-yyy000)](https://github.com/lucas-yyy000)**, who wrote the
-initial implementation. Later contributions came from
-[@kotakondo](https://github.com/kotakondo), Sera Ham, and Elon Raya.
+**[Lucas Jia (@lucas-yyy000)](https://github.com/lucas-yyy000)**.
 
 ## License
 
